@@ -6,7 +6,7 @@ import chiseltest._
 
 import org.scalatest.flatspec.AnyFlatSpec
 
-class BasicTest extends AnyFlatSpec with ChiselScalatestTester {
+class passthruTest extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "MyModule"
   
   //define test case

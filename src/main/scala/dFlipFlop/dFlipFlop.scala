@@ -12,4 +12,8 @@ class dFlipFlop extends Module{
         val q        = Output(UInt(1.W))
         val nq       = Output(UInt(1.W))
     })
+
+    io.q := ~(io.d & io.nq)
+
+    io.nq := ~((~io.d) & io.q)
 }
