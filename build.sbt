@@ -19,7 +19,7 @@ lazy val root = (project in file("."))
       "-feature",
       "-Xcheckinit",
       "-Ymacro-annotations",
-      "-P:chiselplugin:genBundleElements",
+      //"-P:chiselplugin:genBundleElements", //'genBundleElements' is now default behavior, you can remove the scalacOption.
     ),
     addCompilerPlugin("org.chipsalliance" % "chisel-plugin" % chiselVersion cross CrossVersion.full),
   )
