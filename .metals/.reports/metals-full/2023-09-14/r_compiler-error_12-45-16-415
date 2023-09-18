@@ -1,0 +1,130 @@
+java.lang.IndexOutOfBoundsException: 0
+occurred in the presentation compiler.
+
+action parameters:
+offset: 1633
+uri: file://<WORKSPACE>/src/test/scala/and/andTest.scala
+text:
+package and
+
+import chisel3._
+import chisel3.experimental.BundleLiterals._
+import chiseltest._
+
+import org.scalatest.flatspec.AnyFlatSpec
+
+//Write a scala func that takes in 2 boolean (one bit) inputs
+//and output the and of those 2 values. Then have chisel test run 
+//and compare that software = hardware output
+
+//scala func should generate truth table values: store some how (array?)
+//then use peak poke and expect said value
+//try printf truth table first then feed values to peak poke
+
+
+
+
+
+//need scala func stuff 
+class InlineAnd extends Module {
+  val io = IO(new BlackBoxAndIO)
+  val and = Module(new InlineBlackBoxAnd)
+  io <> and.io
+}
+
+//Hardware test using chiseltest libary and peak/poke functions
+//.withAnnotations(Seq(VerilatorBackendAnnotation))
+
+
+class andTest extends AnyFlatSpec with ChiselScalatestTester {
+  def swTester(): Array[BigInt] = {
+    var z = new Array[BigInt](0)
+
+    for (a <- 0 until 2){
+      for(b <- 0 until 2){
+
+        //actually want to feed these values to the hardware tester
+
+        //calculate and of both values 
+        var anded = a & b
+        z = z :+ anded
+      }
+    }
+    var zstring = z.mkString
+    println("Bitwise Result:")
+    println(zstring)
+
+    //return the array
+    return z
+  } 
+
+  def valGen(): Seq[Seq[Int]]  = {
+    val bitlen = 1
+    //val inputs = 2 
+    //generate sequences of all	possible variations of bits
+    //then put them in seq
+
+    var wrap:Seq[Seq[Int]] = Seq()
+    
+    for (a <- 0 until 2){
+      for(b <- 0 until 2){
+        var vals:Seq[Int] = Seq(a , b)
+        wrap = wrap :+ vals
+      }
+    }
+    println("ALL POSSIBLE COMBOS:::")
+    for(@@)
+    
+    return wrap
+
+  } 
+
+
+
+  "AndTest" should "pass" in {
+    
+    test(new InlineAnd).withAnnotations(Seq(VerilatorBackendAnnotation)) { c =>
+      println("a b c")
+      var z = new Array[BigInt](0)
+      for (a <- 0 until 2){
+        for(b <- 0 until 2){
+          c.io.a.poke(a.U)
+          c.io.b.poke(b.U)
+          var cVal = c.io.c.peek().litValue
+          
+          z = z :+ cVal
+          println(a.toString + " " + b.toString + " " + cVal)
+        }
+      }
+      var zstring = z.mkString
+      println("Hardware Result:")
+      println(zstring)
+
+
+      //print statement is inside tester
+      var myArr = valGen()
+
+      
+
+    }
+    
+  }
+  
+}
+
+
+
+
+
+
+error stacktrace:
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:371)
