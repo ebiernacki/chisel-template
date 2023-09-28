@@ -11,7 +11,7 @@ lazy val root = (project in file("."))
     name := "%NAME%",
     libraryDependencies ++= Seq(
       "org.chipsalliance" %% "chisel" % chiselVersion,
-      "edu.berkeley.cs" %% "chiseltest" % "5.0.0" % "test"
+      "edu.berkeley.cs" %% "chiseltest" % "5.0.0" % "test" //how to add to scala cli "edu.berkeley.cs::chiseltest:5.0.0"??
     ),
     scalacOptions ++= Seq(
       "-language:reflectiveCalls",
