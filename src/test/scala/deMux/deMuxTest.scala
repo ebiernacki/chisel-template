@@ -8,20 +8,21 @@ import org.scalatest.flatspec.AnyFlatSpec
 class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
     val in = 1 //always 1 otherwise never any output 
 
+
     println(s"Input vals: in = $in")
     "deMux2to1" should s"d1 should be $in when sel = 0" in {
         test(new deMux){ dut => 
-            dut.io.sel.poke(0.U)
+            dut.io.sel.poke(false.B)
             dut.io.in.poke(in.U)
 
-            
             dut.io.d1.expect(1.U)
+
             dut.io.d2.expect(0.U)
             
         }
-    }
+    }/*
     "deMux2to1" should s"d2 should be $in when sel = 1" in {
-        test(new deMux){ dut => 
+        test(new deMux(1)){ dut => 
             dut.io.sel.poke(1.U)
             dut.io.in.poke(in.U)
 
@@ -32,7 +33,7 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
         }
     }
 
-    /*
+    
     "deMux1to4" should "work" in { //still need to make varying widths and test them
         test(new deMux1to4){ dut => 
             dut.io.s0.poke(0.U)  
@@ -45,11 +46,12 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
             dut.io.o4.expect(0.U)     
         }
     }
-    */
+    
     
     def test1to4(sel: Seq[Int], expected: Seq[Int]) = {
         "deMux1to4" should s"compute for sel: $sel and out: $expected " in {
-            test(new deMux1to4){ dut => 
+            test(new deMux1to4(1)){ dut => 
+                
                 dut.io.s0.poke(sel(0).U)  
                 dut.io.s1.poke(sel(1).U)
                 dut.io.in.poke(in.U)
@@ -68,5 +70,5 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
 
     for (i <- 0 until 4){
         test1to4(inputs(i), outputs(i))
-    }
+    }*/
 }

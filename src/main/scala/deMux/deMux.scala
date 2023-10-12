@@ -3,21 +3,29 @@ package deMux
 import chisel3._
 import chisel3.util._
 
-class deMux() extends Module { //1to2
+class deMux() extends Module { //1to2 
+    //for multibit result(and in) could use bundle of bools to represent bits????
     val io = IO(new Bundle {
-        val sel        = Input(UInt(1.W))
+        val sel        = Input(Bool())
         val in         = Input(UInt(1.W))
         val d1         = Output(UInt(1.W))
         val d2         = Output(UInt(1.W))
     })
-
     val notSel = ~io.sel
+    /*
+    //???? multibit input with width...?
+    when in != 1 {
+        determine which output based on select
+        drive that output to with in and other out to 0
+    }
+    else{
+        set both to 0
+    }
+    */
 
-    val t1 = notSel & io.in
-    val t2 = io.sel & io.in
 
-    io.d1 := t1
-    io.d2 := t2
+    io.d1 := notSel & io.in
+    io.d2 := io.sel & io.in
 }
 
 class deMux1to4() extends Module { //1to4

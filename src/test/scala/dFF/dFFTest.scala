@@ -11,7 +11,7 @@ class wrapIO extends Bundle {
   val D   = Input(UInt(1.W))
   //clk and rst are already there with module
   val Q   = Output(UInt(1.W))
-  val NQ  = Output(UInt(1.W))
+  //val NQ  = Output(UInt(1.W))
 }
 
 //DFF wrapper
@@ -21,9 +21,9 @@ class InlineDFF extends Module {
   
   dff.io.d <> io.D
   dff.io.clk <> clock
-  //dff.io.rst <> reset 
+  dff.io.rst <> reset 
   dff.io.q <> io.Q
-  dff.io.nq <> io.NQ
+  //dff.io.nq <> io.NQ
 
 }
 
@@ -34,6 +34,7 @@ class dFFTest extends AnyFlatSpec with ChiselScalatestTester {
     test(new InlineDFF).withAnnotations(Seq(VerilatorBackendAnnotation, WriteVcdAnnotation)) { c =>
       
       c.io.D.poke(0.U)
+      c.clock.step()
       c.io.Q.expect(0.U)
 
       c.clock.step()
@@ -54,10 +55,3 @@ class dFFTest extends AnyFlatSpec with ChiselScalatestTester {
 
 }
 
-
-
-
-//using verilator or vcd annotaion does not create vcd file
-//compiler errors?
-//circular error
-//
