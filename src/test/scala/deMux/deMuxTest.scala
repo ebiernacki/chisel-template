@@ -4,71 +4,119 @@ import chisel3._
 import chisel3.experimental.BundleLiterals._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
+import scala.util.Random
+
 
 class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
-    val in = 1 //always 1 otherwise never any output 
 
+    // "deMux2to1" should s"work" in {
+    //     test(new deMux(10)){ dut => 
+    //         dut.io.sel.poke(true.B)
+    //         dut.io.in.poke(765.U)
+    //                               //output when sel =
+    //         dut.io.d1.expect(0.U)    // false/0
+    //         dut.io.d2.expect(765.U)  // true/1
+    //     }
+    // }
 
-    println(s"Input vals: in = $in")
-    "deMux2to1" should s"d1 should be $in when sel = 0" in {
-        test(new deMux){ dut => 
-            dut.io.sel.poke(false.B)
-            dut.io.in.poke(in.U)
+    def randomTest(width: Int) = {
+        val in  = BigInt(width, Random).U(width.W)
+        //val in2 = BigInt(width, Random).U(width.W)
+        val select = Random.nextInt(2)
 
-            dut.io.d1.expect(1.U)
-
-            dut.io.d2.expect(0.U)
-            
+        var d1exp = 0.U
+        var d2exp = 0.U
+        if(select == 0){
+            d1exp = in
+            d2exp = 0.U
         }
-    }/*
-    "deMux2to1" should s"d2 should be $in when sel = 1" in {
-        test(new deMux(1)){ dut => 
-            dut.io.sel.poke(1.U)
-            dut.io.in.poke(in.U)
-
-            
-            dut.io.d1.expect(0.U)
-            dut.io.d2.expect(1.U)
-            
+        else if(select == 1){
+            d1exp = 0.U
+            d2exp = in
         }
-    }
 
-    
-    "deMux1to4" should "work" in { //still need to make varying widths and test them
-        test(new deMux1to4){ dut => 
-            dut.io.s0.poke(0.U)  
-            dut.io.s1.poke(1.U)
-            dut.io.in.poke(in.U)
+        //singular test thats generated in for loop below
+        it should s"deMux1:2: width = $width, sel = $select, in = $in" in {
+            test(new deMux(width)) { dut =>
+            dut.io.sel.poke(select)
+            
+            dut.io.in.poke(in)
 
-            dut.io.o1.expect(0.U)     
-            dut.io.o2.expect(1.U)     
-            dut.io.o3.expect(0.U)     
-            dut.io.o4.expect(0.U)     
-        }
-    }
-    
-    
-    def test1to4(sel: Seq[Int], expected: Seq[Int]) = {
-        "deMux1to4" should s"compute for sel: $sel and out: $expected " in {
-            test(new deMux1to4(1)){ dut => 
-                
-                dut.io.s0.poke(sel(0).U)  
-                dut.io.s1.poke(sel(1).U)
-                dut.io.in.poke(in.U)
-
-                dut.io.o1.expect(expected(0).U)     
-                dut.io.o2.expect(expected(1).U)     
-                dut.io.o3.expect(expected(2).U)     
-                dut.io.o4.expect(expected(3).U)     
+            dut.io.d1.expect(d1exp)
+            dut.io.d2.expect(d2exp)
+            
             }
         }
     }
 
-    //set seq for inputs and outputs then call func 
-    var inputs: Seq[Seq[Int]] = Seq(Seq(0,0),Seq(0,1),Seq(1,0),Seq(1,1))
-    var outputs: Seq[Seq[Int]] = Seq(Seq(1,0,0,0),Seq(0,1,0,0),Seq(0,0,1,0),Seq(0,0,0,1))
+    //generate seq of random widths in range  1 -> 64, add 64 to end
+    var randomWidths: Seq[Int] = Seq.fill(5)(Random.nextInt(64) + 1)
+    randomWidths = randomWidths :+ 64
 
-    for (i <- 0 until 4){
-        test1to4(inputs(i), outputs(i))
-    }*/
+    //generate 6 tests for all (6) widths 
+    for (width <- randomWidths) {
+        randomTest(width)
+    }
+
+    // "deMux1to4" should s"work" in {
+    //     test(new deMux1to4(10)){ dut => 
+    //         dut.io.s0.poke(0.U)
+    //         dut.io.s1.poke(1.U)
+    //         dut.io.in.poke(765.U)
+    //                                 //  s1 , s0
+    //         dut.io.d1.expect(0.U)    // 0  ,  0
+    //         dut.io.d2.expect(0.U)  // 0  ,  1
+    //         dut.io.d3.expect(765.U)  // 1  ,  0
+    //         dut.io.d4.expect(0.U)  // 1  ,  1
+    //     }
+    // }
+
+    def randomTest4to1(width: Int) = {
+        val in  = BigInt(width, Random).U(width.W)
+        val s0 = Random.nextInt(2)
+        val s1 = Random.nextInt(2)
+
+        var d1exp = 0.U
+        var d2exp = 0.U
+        var d3exp = 0.U
+        var d4exp = 0.U
+        if(s0 == 0 & s1 == 0){
+            d1exp = in
+        }
+        else if(s0 == 1 & s1 == 0){
+            d2exp = in
+        }
+        else if(s0 == 0 & s1 == 1){
+            d3exp = in
+        }
+        else if(s0 == 1 & s1 == 1){
+            d4exp = in
+        }
+
+        //singular test thats generated in for loop below
+        it should s"deMux1:2: width = $width, s0 = $s0, s1 = $s1, in = $in" in {
+            test(new deMux1to4(width)) { dut =>
+            dut.io.s0.poke(s0)
+            dut.io.s1.poke(s1)
+            
+            dut.io.in.poke(in)
+
+            dut.io.d1.expect(d1exp)
+            dut.io.d2.expect(d2exp)
+            dut.io.d3.expect(d3exp)
+            dut.io.d4.expect(d4exp)
+            
+            }
+        }
+    }
+
+    //generate 6 tests for all (6) widths 
+    for (width <- randomWidths) {
+        randomTest(width)
+    }
+
+
+
+
+
 }
