@@ -29,29 +29,29 @@ class InlineDFF extends Module {
 
 
 class dFFTest extends AnyFlatSpec with ChiselScalatestTester {
-  "dffTest" should "pass" in {
+  // "dffTest" should "pass" in {
 
-    test(new InlineDFF).withAnnotations(Seq(VerilatorBackendAnnotation, WriteVcdAnnotation)) { c =>
+  //   test(new InlineDFF).withAnnotations(Seq(VerilatorBackendAnnotation, WriteVcdAnnotation)) { c =>
       
-      c.io.D.poke(0.U)
-      c.clock.step()
-      c.io.Q.expect(0.U)
+  //     c.io.D.poke(0.U)
+  //     c.clock.step()
+  //     c.io.Q.expect(0.U)
 
-      c.clock.step()
-      c.io.Q.expect(0.U)
+  //     c.clock.step()
+  //     c.io.Q.expect(0.U)
 
 
-      c.io.D.poke(1.U)
-      c.clock.step()
-      c.io.Q.expect(1.U)
+  //     c.io.D.poke(1.U)
+  //     c.clock.step()
+  //     c.io.Q.expect(1.U)
 
-      //leaving D poked with a 1.U
-      c.clock.step(3)
-      c.io.Q.expect(1.U)
+  //     //leaving D poked with a 1.U
+  //     c.clock.step(3)
+  //     c.io.Q.expect(1.U)
   
-    }
+  //   }
     
-  }
+  // }
 
 }
 

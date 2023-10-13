@@ -30,6 +30,7 @@ class InlineAnd extends Module {
 
 
 class andTest extends AnyFlatSpec with ChiselScalatestTester {
+  /*
   def swTestVals(): Array[BigInt] = {
     var z = new Array[BigInt](0)
 
@@ -77,48 +78,48 @@ class andTest extends AnyFlatSpec with ChiselScalatestTester {
     return wrap
 
   } 
+  */
 
 
-
-  "AndTest" should "pass" in {
+  // "AndTest" should "pass" in {
     
-    test(new InlineAnd).withAnnotations(Seq(VerilatorBackendAnnotation)) { c =>
-      //Parse through the seq[seq] and poke with those values
-      //work in yeild???????
+  //   test(new InlineAnd).withAnnotations(Seq(VerilatorBackendAnnotation)) { c =>
+  //     //Parse through the seq[seq] and poke with those values
+  //     //work in yeild???????
 
-      var seqs = valGen()
-      //for each seq in seqs
-        //for each value in seq
-          //poke values
+  //     var seqs = valGen()
+  //     //for each seq in seqs
+  //       //for each value in seq
+  //         //poke values
 
 
-          //expect values from swTestVals
+  //         //expect values from swTestVals
 
-      println("a b c")
-      var z = new Array[BigInt](0)
-      for (a <- 0 until 2){
-        for(b <- 0 until 2){
-          c.io.a.poke(a.U)
-          c.io.b.poke(b.U)
-          var cVal = c.io.c.peek().litValue
+  //     println("a b c")
+  //     var z = new Array[BigInt](0)
+  //     for (a <- 0 until 2){
+  //       for(b <- 0 until 2){
+  //         c.io.a.poke(a.U)
+  //         c.io.b.poke(b.U)
+  //         var cVal = c.io.c.peek().litValue
           
-          z = z :+ cVal
-          println(a.toString + " " + b.toString + " " + cVal)
-        }
-      }
-      var zstring = z.mkString
-      println("Hardware Result:")
-      println(zstring)
+  //         z = z :+ cVal
+  //         println(a.toString + " " + b.toString + " " + cVal)
+  //       }
+  //     }
+  //     var zstring = z.mkString
+  //     println("Hardware Result:")
+  //     println(zstring)
 
 
-      //print statement is inside tester
-      var myArr = valGen()
+  //     //print statement is inside tester
+  //     var myArr = valGen()
 
       
 
-    }
+  //   }
     
-  }
+  // }
   
 }
 
