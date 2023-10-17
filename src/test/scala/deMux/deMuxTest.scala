@@ -20,19 +20,20 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
     // }
 
     def randomTest(width: Int) = {
-        val in  = BigInt(width, Random).U(width.W)
+        val in  = BigInt(width, Random)
+        val inAsUint = in.U(width.W)
         //val in2 = BigInt(width, Random).U(width.W)
         val select = Random.nextInt(2)
 
         var d1exp = 0.U
         var d2exp = 0.U
         if(select == 0){
-            d1exp = in
+            d1exp = inAsUint
             d2exp = 0.U
         }
         else if(select == 1){
             d1exp = 0.U
-            d2exp = in
+            d2exp = inAsUint
         }
 
         //singular test thats generated in for loop below
@@ -40,7 +41,7 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
             test(new deMux(width)) { dut =>
             dut.io.sel.poke(select)
             
-            dut.io.in.poke(in)
+            dut.io.in.poke(inAsUint)
 
             dut.io.d1.expect(d1exp)
             dut.io.d2.expect(d2exp)
@@ -72,7 +73,8 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
     // }
 
     def randomTest4to1(width: Int) = {
-        val in  = BigInt(width, Random).U(width.W)
+        val in  = BigInt(width, Random)
+        val inAsUint = in.U(width.W)
         val s0 = Random.nextInt(2)
         val s1 = Random.nextInt(2)
 
@@ -81,25 +83,25 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
         var d3exp = 0.U
         var d4exp = 0.U
         if(s0 == 0 & s1 == 0){
-            d1exp = in
+            d1exp = inAsUint
         }
         else if(s0 == 1 & s1 == 0){
-            d2exp = in
+            d2exp = inAsUint
         }
         else if(s0 == 0 & s1 == 1){
-            d3exp = in
+            d3exp = inAsUint
         }
         else if(s0 == 1 & s1 == 1){
-            d4exp = in
+            d4exp = inAsUint
         }
 
         //singular test thats generated in for loop below
-        it should s"deMux1:2: width = $width, s0 = $s0, s1 = $s1, in = $in" in {
+        it should s"deMux1:4: width = $width, s0 = $s0, s1 = $s1, in = $in" in {
             test(new deMux1to4(width)) { dut =>
             dut.io.s0.poke(s0)
             dut.io.s1.poke(s1)
             
-            dut.io.in.poke(in)
+            dut.io.in.poke(inAsUint)
 
             dut.io.d1.expect(d1exp)
             dut.io.d2.expect(d2exp)
@@ -112,7 +114,7 @@ class deMuxTest extends AnyFlatSpec with ChiselScalatestTester {
 
     //generate 6 tests for all (6) widths 
     for (width <- randomWidths) {
-        randomTest(width)
+        randomTest4to1(width)
     }
 
 
