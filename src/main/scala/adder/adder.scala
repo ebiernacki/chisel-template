@@ -1,6 +1,7 @@
 package adder
 
 import chisel3._
+import chisel3.util._
 
 //full ripple-carry adder w/ initial carry of 0
 class adder(width: Int) extends Module { 
